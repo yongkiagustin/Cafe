@@ -21,7 +21,7 @@ public class InputBarang extends javax.swing.JFrame {
     /**
      * Creates new form InputBarang
      */
-    public void load_table(int kode) {
+    public void load_table() {
 
         // membuat tampilan model tabel
         DefaultTableModel model = new DefaultTableModel();
@@ -46,8 +46,6 @@ public class InputBarang extends javax.swing.JFrame {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
         }
-        
-        kode_barang = kode;
 
     }
 
@@ -70,21 +68,23 @@ public class InputBarang extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, e.getMessage());
         }
         kosong();
-        load_table(kode_barang);
+        load_table();
     }
 
     //edit data
     public void EditData() {
         String nama_barang = "";
-        int kode_barang;
         int stok;
         nama_barang = jTextNamaBarang.getText();
         stok = Integer.valueOf(jTextStokBarang.getText());
+        int harga_barang = Integer.valueOf(jTextHargaBarang.getText());
 
         try {
             String sql = "update tb_barang "
                     + "SET nama_barang ='" + nama_barang + "'"
-                    + "WHERE kode_barang='";
+                    + ", stok ='" + stok + "'"
+                    + ", harga ='" + harga_barang + "'"
+                    + "WHERE kode_barang='" + kode_barang + "'";
 
             java.sql.Connection conn = (Connection) Config.currentConnection;
             java.sql.PreparedStatement pst = conn.prepareStatement(sql);
@@ -96,13 +96,13 @@ public class InputBarang extends javax.swing.JFrame {
 
         kosong();
 
-        load_table(this.kode_barang);
+        load_table();
 
     }
 
     public InputBarang() {
         initComponents();
-        load_table(kode_barang);
+        load_table();
         kosong();
     }
 
@@ -388,6 +388,7 @@ public class InputBarang extends javax.swing.JFrame {
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
         int baris = jTable1.rowAtPoint(evt.getPoint());
+        kode_barang = Integer.parseInt( jTable1.getValueAt(baris, 1).toString() );
         String namaBarang = jTable1.getValueAt(baris, 2).toString();
         jTextNamaBarang.setText(namaBarang);
         String harga = jTable1.getValueAt(baris, 3).toString();

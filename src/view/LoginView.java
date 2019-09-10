@@ -6,9 +6,14 @@
 package view;
 
 import java.awt.Component;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.sql.Connection;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import koneksi.Config;
 
 /**
  *
@@ -28,6 +33,50 @@ public class LoginView extends javax.swing.JFrame {
      */
     public LoginView() {
         initComponents();
+    }
+    
+    public boolean isAuthUser(String username, String password) {
+        try {
+            String sql = "SELECT * FROM tb_users WHERE nama_user ='" + username +  "' AND password ='" + getMd5(password) +  "'";
+            java.sql.Connection conn = (Connection) Config.currentConnection;
+            java.sql.Statement stm = conn.createStatement();
+            java.sql.ResultSet res = stm.executeQuery(sql);
+            
+            res.last();
+            if (res.getRow() > 0) return true;
+            return false;
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, e.getMessage());
+            return false;
+        }
+    }
+    
+    public static String getMd5(String input) 
+    { 
+        try { 
+  
+            // Static getInstance method is called with hashing MD5 
+            MessageDigest md = MessageDigest.getInstance("MD5"); 
+  
+            // digest() method is called to calculate message digest 
+            //  of an input digest() return array of byte 
+            byte[] messageDigest = md.digest(input.getBytes()); 
+  
+            // Convert byte array into signum representation 
+            BigInteger no = new BigInteger(1, messageDigest); 
+  
+            // Convert message digest into hex value 
+            String hashtext = no.toString(16); 
+            while (hashtext.length() < 32) { 
+                hashtext = "0" + hashtext; 
+            } 
+            return hashtext; 
+        }  
+  
+        // For specifying wrong message digest algorithms 
+        catch (NoSuchAlgorithmException e) { 
+            throw new RuntimeException(e); 
+        } 
     }
 
     /**
@@ -54,7 +103,6 @@ public class LoginView extends javax.swing.JFrame {
         jLabel1.setText("LOGIN");
 
         jTextNama.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
-        jTextNama.setText("kosongkan");
         jTextNama.setPreferredSize(new java.awt.Dimension(57, 30));
 
         jLabel2.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
@@ -86,9 +134,8 @@ public class LoginView extends javax.swing.JFrame {
                 .addGap(23, 23, 23)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jTextNama, javax.swing.GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE)
-                        .addComponent(jTextPass)))
+                    .addComponent(jTextNama, javax.swing.GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE)
+                    .addComponent(jTextPass))
                 .addContainerGap(124, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -125,7 +172,8 @@ public class LoginView extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         String nama = jTextNama.getText();
-        if (nama.equals("admin")) {
+        String password = String.valueOf(jTextPass.getPassword());
+        if (isAuthUser(nama, password)) {
             JOptionPane.showMessageDialog(this, "LOGIN BERHASIL!");
             DashboardKasir daskas = new DashboardKasir();
             daskas.setVisible(true);

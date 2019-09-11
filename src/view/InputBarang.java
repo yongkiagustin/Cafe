@@ -39,9 +39,9 @@ public class InputBarang extends javax.swing.JFrame {
             java.sql.ResultSet res = stm.executeQuery(sql);
             while (res.next()) {
                 model.addRow(new Object[]{no++, res.getString(1), res.getString(2), res.getString(3), res.getString(4)});
-                
+
             }
-            
+
             jTable1.setModel(model);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
@@ -58,17 +58,22 @@ public class InputBarang extends javax.swing.JFrame {
 
     //untuk menambah data barang
     public void TambahData() {
-        try {
-            String sql = "INSERT INTO tb_barang (nama_barang, harga, stok) VALUES ('" + jTextNamaBarang.getText() + "','" + Integer.parseInt(jTextHargaBarang.getText()) + "','" + Integer.parseInt(jTextStokBarang.getText()) + "')";
-            java.sql.Connection conn = (Connection) Config.currentConnection;
-            java.sql.PreparedStatement pst = conn.prepareStatement(sql);
-            pst.execute();
-            JOptionPane.showMessageDialog(null, "Penyimpanan Data Berhasil");
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, e.getMessage());
+        if ((jTextHargaBarang.getText().equals(null)) | (jTextNamaBarang.getText().equals(null)) | (jTextStokBarang.getText().equals(null))) {
+            JOptionPane.showMessageDialog(this, "Data tidak boleh ada yang kosong");
+
+        } else {
+            try {
+                String sql = "INSERT INTO tb_barang (nama_barang, harga, stok) VALUES ('" + jTextNamaBarang.getText() + "','" + Integer.parseInt(jTextHargaBarang.getText()) + "','" + Integer.parseInt(jTextStokBarang.getText()) + "')";
+                java.sql.Connection conn = (Connection) Config.currentConnection;
+                java.sql.PreparedStatement pst = conn.prepareStatement(sql);
+                pst.execute();
+                JOptionPane.showMessageDialog(null, "Penyimpanan Data Berhasil");
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, e.getMessage());
+            }
+            kosong();
+            load_table();
         }
-        kosong();
-        load_table();
     }
 
     //edit data
@@ -98,6 +103,19 @@ public class InputBarang extends javax.swing.JFrame {
 
         load_table();
 
+    }
+
+    public void hapus_data() {
+        // fungsi hapus data
+        try {
+            String sql = "delete from tb_barang where kode_barang='" + kode_barang + "'";
+            java.sql.Connection conn = (Connection) Config.currentConnection;
+            java.sql.PreparedStatement pst = conn.prepareStatement(sql);
+            pst.execute();
+            JOptionPane.showMessageDialog(this, "Data berhasil di hapus");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, e.getMessage());
+        }
     }
 
     public InputBarang() {
@@ -137,8 +155,9 @@ public class InputBarang extends javax.swing.JFrame {
         jMenu1 = new javax.swing.JMenu();
         jMenuItem2 = new javax.swing.JMenuItem();
         jMenuItem1 = new javax.swing.JMenuItem();
+        jMenuInputUser = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
-        jMenuItem3 = new javax.swing.JMenuItem();
+        jMenuLogout = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -343,14 +362,27 @@ public class InputBarang extends javax.swing.JFrame {
         });
         jMenu1.add(jMenuItem1);
 
+        jMenuInputUser.setText("Input Users");
+        jMenuInputUser.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuInputUserActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuInputUser);
+
         jMenuBar2.add(jMenu1);
 
         jMenu2.setText("SETTINGS");
         jMenu2.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
 
-        jMenuItem3.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
-        jMenuItem3.setText("Logout");
-        jMenu2.add(jMenuItem3);
+        jMenuLogout.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        jMenuLogout.setText("Logout");
+        jMenuLogout.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuLogoutActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuLogout);
 
         jMenuBar2.add(jMenu2);
 
@@ -378,7 +410,9 @@ public class InputBarang extends javax.swing.JFrame {
     }//GEN-LAST:event_jButSimpanActionPerformed
 
     private void jButHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButHapusActionPerformed
-
+        hapus_data();
+        load_table();
+        kosong();
 
     }//GEN-LAST:event_jButHapusActionPerformed
 
@@ -388,7 +422,7 @@ public class InputBarang extends javax.swing.JFrame {
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
         int baris = jTable1.rowAtPoint(evt.getPoint());
-        kode_barang = Integer.parseInt( jTable1.getValueAt(baris, 1).toString() );
+        kode_barang = Integer.parseInt(jTable1.getValueAt(baris, 1).toString());
         String namaBarang = jTable1.getValueAt(baris, 2).toString();
         jTextNamaBarang.setText(namaBarang);
         String harga = jTable1.getValueAt(baris, 3).toString();
@@ -410,6 +444,18 @@ public class InputBarang extends javax.swing.JFrame {
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         this.setVisible(true);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void jMenuInputUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuInputUserActionPerformed
+        InputUser user = new InputUser();
+        user.setVisible(true);
+        this.setVisible(false);
+    }//GEN-LAST:event_jMenuInputUserActionPerformed
+
+    private void jMenuLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuLogoutActionPerformed
+        LoginView login = new LoginView();
+        login.setVisible(true);
+        this.setVisible(false);
+    }//GEN-LAST:event_jMenuLogoutActionPerformed
 
     /**
      * @param args the command line arguments
@@ -467,9 +513,10 @@ public class InputBarang extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar2;
+    private javax.swing.JMenuItem jMenuInputUser;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
-    private javax.swing.JMenuItem jMenuItem3;
+    private javax.swing.JMenuItem jMenuLogout;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;

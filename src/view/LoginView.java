@@ -17,7 +17,7 @@ import koneksi.Config;
 
 /**
  *
- * @author Young
+ * @author ..
  */
 public class LoginView extends javax.swing.JFrame {
 
@@ -97,6 +97,7 @@ public class LoginView extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -151,9 +152,9 @@ public class LoginView extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(jTextPass, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(26, 26, 26)
+                .addGap(18, 18, 18)
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(44, 44, 44))
+                .addGap(52, 52, 52))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -177,8 +178,6 @@ public class LoginView extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "LOGIN BERHASIL!");
             DashboardKasir daskas = new DashboardKasir();
             daskas.setVisible(true);
-//        DashboardView dashboard = new DashboardView();
-//        dashboard.setVisible(true);
             this.setVisible(false);
         }else{
             JOptionPane.showMessageDialog(this, "Username Atau Password Salah");

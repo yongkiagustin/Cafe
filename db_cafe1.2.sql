@@ -26,13 +26,27 @@ CREATE TABLE `tb_barang` (
   `harga` int(30) unsigned NOT NULL,
   `stok` int(30) unsigned NOT NULL,
   PRIMARY KEY (`kode_barang`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 
 /*Data for the table `tb_barang` */
 
 insert  into `tb_barang`(`kode_barang`,`nama_barang`,`harga`,`stok`) values 
 (1,'Teh Botol',5000,5),
-(2,'asdsa1',1,1);
+(2,'Teh Sari',5000,40),
+(3,'Teh Sari',5000,40);
+
+/*Table structure for table `tb_users` */
+
+DROP TABLE IF EXISTS `tb_users`;
+
+CREATE TABLE `tb_users` (
+  `id_user` int(4) unsigned NOT NULL AUTO_INCREMENT,
+  `nama_user` varchar(30) NOT NULL,
+  `password` varchar(32) NOT NULL,
+  PRIMARY KEY (`id_user`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `tb_users` */
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
